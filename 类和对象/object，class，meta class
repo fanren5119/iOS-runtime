@@ -1,0 +1,33 @@
+1.Object（id）
+        在objc.h中，id的定义如下：
+            typedef struct objc_object *id;
+        id被定义为指向一个objc_object结构体的指针。
+        在objc.h中，objc_object的定义如下：
+            struct objc_object {Class isa};
+        可以知道，Objective-C中的object在最后被转换为C的结构体，而在这个结构体中，
+    有一个isa指针，指向他的类别Class。
+    
+2.Class
+        在objc.h中，Class的定义：
+            typedef struct objc_class *Class;
+        而在runtime.h中，objc_class的定义：
+            struct objc_class : objc_object {
+                Class superclass;
+                ...
+            };
+        我们可以看到，objc_class是继承自objc_object，所以objc_class也是一个对象。
+        我们可以得到，在Objective-C设计思想中，一切都是对象。Class在设计本身也是
+    一个对象，而这个对象对应的类，我们叫他Meta Class。即Class结构中的isa指向的是
+    他的Meta Class。
+
+3.Meta Class
+        根据上面的描述，我们可以把Meta Class理解为一个Class对象的Class。而Meta 
+    Class本身也是一个Class，他跟其他的Class也有自己的isa和super_class指针。
+        ps：看文件class-metalclass
+        ① 每一个Class都有一个isa指针指向一个唯一的Meta Class；
+        ② 每一个Metal Class的isa指针都指向NSObejct的Meta Class；
+        ③ NSObject的Meta Class的isa指针指向自己，形成一个回路；
+        ④ 每一个Meta Class的super class指针指向它原本Class的Super Class的Meta Class；
+            但是NSObject的Meta Class的Super Class指向NSObject Class本身
+        ⑤ NSObject Class的super class指向nil；
+
