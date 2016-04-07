@@ -1,0 +1,75 @@
+1.SEL
+    在objc.h中，SEL有如下定义：
+        typedef struct objc_selector *SEL;
+    SEL是一个指向objc_selector结构体的指针。
+    每一个方法都对应一个SEL，编译器会更具每一个方法的方法名生成唯一的SEL，这些SEL组成
+了一个集合，当我们在集合中查找某个方法时，只需要去找这个方法对应的SEL即可。而SEL本质上
+是一个字符串，所以直接比较他们的地址即可。
+    而不同的类可以有相同的selector，不同类的对象，在执行相同的selector时，会在自己的方
+法列表中根据selector区寻找自己对应的IMP。
+
+2.IMP？？
+    在objc.h中，IMP有如下定义：
+        typedef id (*IMP)(id, SEL, ...)
+    IMP本质上是一个函数指针，这个被指向的函数包含一个接收消息的id，调用方法的SEL，以及
+一些参数，并返回一个id。
+    因此，在调用方法时，可以通过SEL获得它所对应的IMP，在获得函数指针后，就可以像普通的c
+语言函数一样使用这个函数指针。
+
+3.方法列表
+    在objc.h中，objc_class的结构体定义如下：
+        struct objc_class {
+            Class isa  OBJC_ISA_AVAILABILITY;
+        #if !__OBJC2__
+            Class super_class                                   OBJC2_UNAVAILABLE;
+            const char *name                                    OBJC2_UNAVAILABLE;
+            long version                                        OBJC2_UNAVAILABLE;
+            long info                                           OBJC2_UNAVAILABLE;
+            long instance_size                                  OBJC2_UNAVAILABLE;
+            struct objc_ivar_list *ivars                        OBJC2_UNAVAILABLE;
+            struct objc_method_list **methodLists               OBJC2_UNAVAILABLE;
+            struct objc_cache *cache                            OBJC2_UNAVAILABLE;
+            struct objc_protocol_list *protocols                OBJC2_UNAVAILABLE;
+        #endif
+        } OBJC2_UNAVAILABLE;
+    其中objc_method_list就是用来存储当前类的方法链表，objc_method存储了类的某个方法的信息；
+    而objc_cache用来存储使用过的方法，可以提高性能。
+
+4.Mehod？？
+    在objc.h中，Method有如下定义：
+        typedef struct objc_method *Method;
+    而在objc.h中，objc_method有如下定义：
+        struct objc_method {
+            SEL method_name                                     OBJC2_UNAVAILABLE;
+            char *method_types                                  OBJC2_UNAVAILABLE;
+            IMP method_imp                                      OBJC2_UNAVAILABLE;
+        } 
+    其中method_types是个char指针，存储着方法的参数类型和返回值类型。
+    
+5.Cache？？
+    在objc.h中，Cache有如下定义：
+        typedef struct objc_cache *Cache;
+    而在objc.h中，objc_cache有如下定义
+        struct objc_cache {
+            unsigned int mask /* total = mask + 1 */            OBJC2_UNAVAILABLE;
+            unsigned int occupied                               OBJC2_UNAVAILABLE;
+            Method buckets[1]                                   OBJC2_UNAVAILABLE;
+        };
+    mask：指定分配cache buckets的总数。在方法查找中，runtime使用这个字段来确定数组的索引位置；
+    occupied：实际占用cache buckets的总数；
+    bukets：指定Method数据结构指针的数组。这个数组可能报刊不超过mask+1个元素。需要注意的是，
+指针可能是NULL，表示这个环城bucket没有被占用，另外被占用的bucket可能是不连续的。这个数组可能
+会随着时间而增长。
+
+6.objc_msgSend的工作流程
+    在Objective-C中，消息知道运行时才会绑定到方法的实现上。编译器会把代码中的[target doSth]
+转换为objc_msgSend消息函数，这个函数完成了动态绑定的所有事情。他的运行流程如下：
+    ① 检查selector是否需要忽略（mac开发中开启GC才会忽略retain，release方法）；
+    ② 检查target是否为nil，如果为nil，直接cleanup，然后return（这就是可以向nil发送消息的原因）；
+    ③ 然后在target的class中根据selector去找IMP；
+    而寻找IMP的过程如下：
+    ① 先从当前class的cache方法列表（cache methodList）里去找；
+    ② 找到了，调到对应的函数实现；
+    ③ 没找到，就从class的方法列表（methodLists）中找；
+    ④ 还找不到，就到super class的方法列表中找，直到找到基类（NSObject）为止；
+    ⑤ 最后再找不到，就会进入动态方法解析和消息转发机制。
