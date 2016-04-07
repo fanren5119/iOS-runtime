@@ -27,3 +27,25 @@ int main(int argc, char * argv[]) {
     }
     return 0;
 }
+
+
+
+/*
+    上述答案的解释：
+    在Object.mm中，isKindOfClass方法的实现：
+    - (BOOL)isKindOf:aClass
+    {
+        Class cls;
+        for (cls = isa; cls; cls = cls->superclass)
+            if (cls == (Class)aClass)
+                return YES;
+        return NO;
+    }
+    isMemberOfClass方法的实现
+    - (BOOL)isMemberOf:aClass
+    {
+        return isa == (Class)aClass;
+    }
+    在上面的调用中，都是判断isa指针
+ */
+
