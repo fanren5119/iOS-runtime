@@ -1,0 +1,36 @@
+1.关联对象简介
+    在开发中经常给已有的类添加属性和方法，但是Objective-C不允许给已有的类扩展属性，因为
+类扩展不能自动生成成员变量。但是我们可以通过Objective-C的runtime给类关联属性。
+    
+2.关联API  
+    ① objc_setAssociatedObject：设置关联值
+    ② objc_getAssociatedObject：获取关联值
+    ③ objc_removeAssociatedObjects：移除关联值
+    
+3.关联策略
+    ① OBJC_ASSOCIATION_ASSIGN： 表示弱引用，通常是基本数据，如int，float等；
+    ② OBJC_ASSOCIATION_RETAIN_NONATOMIC：表示强引用，但是不保留其原子性；
+    ③ OBJC_ASSOCIATION_COPY_NONATOMIC：表示关联对象copy，但是不保留其原子性；
+    ④ OBJC_ASSOCIATION_RETAIN：表示强用，保留其原子性；
+    ⑤ OBJC_ASSOCIATION_COPY：表示关联对象copy，保留其原子性。
+    
+4.关联对象的释放
+    在ARC和MRC都不需要再dealloc中手动释放；
+    
+ps：对象内存的销毁时间表：
+    1.调用release，引用计数为0
+        ① 对象正在被销毁，生命周期即将结束；
+        ② 不能再有新的__weak弱引用，否则将指向nil；
+        ③ 调用[self dealloc];
+    2.父类调用dealloc
+        ① 继承关系中最底层的父类调用dealloc；
+        ② 如果是MRC，则需手动释放实例变量；
+        ③ 继承关系中每层父类，都要调用dealloc；
+    3.NObject调用dealloc方法
+        ① 只做一件事，调用runtime中的objc_dispose()方法；
+    4.调用objc_dispose方法
+        ① 为C++实例变量们，调用destructors；
+        ② 为ARC状态下的实例变量们，调用release方法；
+        ③ 解除所有使用runtime Association关联的对象；
+        ④ 解除所有的__weak引用；
+        ⑤ 调用free();
