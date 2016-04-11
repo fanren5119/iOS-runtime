@@ -1,0 +1,18 @@
+    一个对象在调用方法的时候，如果不能再此类或者此类的所有父类中找到此方法，就会进入动态方法解析。
+    动态方法解析的步骤如下：
+    1.调用方法resolveInstanceMethod，允许用户在此时为该Class动态添加实现；
+        如果有实现了，则调用并返回YES，那么重新开始objc_msgSend流程，这一次对象会响应这个方法选择
+    器，是因为他已经调用过方法class_addMethod。
+        如果仍没有实现，则会进行下一步；
+    2.调用方法forwardingTargetForSelector，此方法会尝试找到一个能响应该消息的对象；
+        如果获取到，则直接把消息转发给他，返回非nil对象。
+        否则返回nil。
+        ps：这里不要返回self，否则会造成死循环。
+    3.调用方法methodSignatureForSelector，尝试获得一个方法签名；
+        如果获取不到，则会直接调用doesNotRecognizeSelector，抛出异常；
+        如果可以获取到，则会返回非nil，同时会创建一个NSInvocation，并传给下一个方法；
+    4.调用方法forwardInvocation，将上一步获取到的方法签名包装成一个NSInvocation对象传入，而最终的
+的处理，就在这一方法中，并返回非nil。
+
+    ps：① 最常见的消息转发：通过重写方法3和方法4；
+        ② 也可以直接调用objc_msgForword，此时会跳过查找IMP的过程，直接出发消息转发。
