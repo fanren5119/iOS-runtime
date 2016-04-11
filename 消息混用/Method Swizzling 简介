@@ -1,0 +1,20 @@
+1.Method Swizzling 简介
+    在开发中，如果我们想该系统的某一个方法的实现，有三种方式：
+    ① 继承原有的类，重写某一个方法；
+    ② 使用类别重写某一个方法；
+    ③ 使用Swizzling；
+
+2.Method Swizzling 的原理
+    在Objective-C中，调用一个方法，其实是向对象发送一条消息，而查找消息的唯一依据是selector
+的名字，所以，我们可以使用Objective-C的runtime机制，在运行时交换selector对应的方法实现，以达
+到我们的目的。
+    在Objective-C中，每一个selector与IMP是一一对应的，而Swizzling的原理就是交换两个selector
+对应的IMP。
+
+3.Method Swizzling 的实现
+    ① Method Swizzling的实现最好是在load方法中实现，因为Method Swizzling是全局性的，所以放在
+最保险的位置是很重要的。而load能保证类在初始化的时候一定会调用，这可以保证同意性。
+    ② 使用dispatch_once只执行一次，因为Method Swizzling是全局性的，所以应该确保代码在多线程
+中只执行一次。
+
+4.例子：这里给出了一个例子，本例子用来实现，按钮在间隔时间内不能重复点击。
