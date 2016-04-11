@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="9532" systemVersion="15D21" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="BYZ-38-t0r">
+    <dependencies>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9530"/>
+    </dependencies>
+    <scenes>
+        <!--View Controller-->
+        <scene sceneID="tne-QT-ifu">
+            <objects>
+                <viewController id="BYZ-38-t0r" customClass="ViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="y3c-jy-aDJ"/>
+                        <viewControllerLayoutGuide type="bottom" id="wfy-db-euE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="aIq-S1-zJd">
+                                <rect key="frame" x="20" y="64" width="560" height="40"/>
+                                <color key="backgroundColor" red="1" green="0.51372549020000002" blue="0.82352941180000006" alpha="1" colorSpace="calibratedRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="40" id="VyA-fv-JDu"/>
+                                </constraints>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="消息转发(动态添加方法)">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="respondsToAddMethod:" destination="BYZ-38-t0r" eventType="touchUpInside" id="AUD-HG-mKl"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="sGj-vQ-5ph">
+                                <rect key="frame" x="20" y="224" width="560" height="40"/>
+                                <color key="backgroundColor" red="1" green="0.51372549020000002" blue="0.82352941180000006" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="消息转发(改变执行的方法)">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="respondsToChangeMethod:" destination="BYZ-38-t0r" eventType="touchUpInside" id="T2j-db-V98"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="V6m-96-vw7">
+                                <rect key="frame" x="20" y="144" width="560" height="40"/>
+                                <color key="backgroundColor" red="1" green="0.51372549020000002" blue="0.82352941180000006" alpha="1" colorSpace="calibratedRGB"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <state key="normal" title="消息转发(改变接收对象)">
+                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="respondsToChangeObject:" destination="BYZ-38-t0r" eventType="touchUpInside" id="geb-1h-v0x"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="V6m-96-vw7" firstAttribute="height" secondItem="aIq-S1-zJd" secondAttribute="height" id="3S4-W9-K2B"/>
+                            <constraint firstItem="aIq-S1-zJd" firstAttribute="top" secondItem="y3c-jy-aDJ" secondAttribute="bottom" constant="44" id="BIA-VA-Yd2"/>
+                            <constraint firstItem="sGj-vQ-5ph" firstAttribute="top" secondItem="V6m-96-vw7" secondAttribute="bottom" constant="40" id="I1g-Ip-vvu"/>
+                            <constraint firstItem="sGj-vQ-5ph" firstAttribute="trailing" secondItem="V6m-96-vw7" secondAttribute="trailing" id="ITL-xd-wRo"/>
+                            <constraint firstItem="sGj-vQ-5ph" firstAttribute="leading" secondItem="V6m-96-vw7" secondAttribute="leading" id="P93-nm-lSb"/>
+                            <constraint firstItem="sGj-vQ-5ph" firstAttribute="height" secondItem="V6m-96-vw7" secondAttribute="height" id="Ppx-SK-Uqq"/>
+                            <constraint firstItem="aIq-S1-zJd" firstAttribute="leading" secondItem="8bC-Xf-vdC" secondAttribute="leading" constant="20" id="SGh-xg-cgT"/>
+                            <constraint firstAttribute="trailing" secondItem="aIq-S1-zJd" secondAttribute="trailing" constant="20" id="Ts9-BC-Hgx"/>
+                            <constraint firstItem="V6m-96-vw7" firstAttribute="top" secondItem="aIq-S1-zJd" secondAttribute="bottom" constant="40" id="apO-i1-xUU"/>
+                            <constraint firstItem="V6m-96-vw7" firstAttribute="leading" secondItem="aIq-S1-zJd" secondAttribute="leading" id="jjH-p2-wb4"/>
+                            <constraint firstItem="V6m-96-vw7" firstAttribute="trailing" secondItem="aIq-S1-zJd" secondAttribute="trailing" id="qRq-CH-BS5"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="487" y="475"/>
+        </scene>
+    </scenes>
+</document>
