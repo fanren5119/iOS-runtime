@@ -20,4 +20,7 @@
     通过method_getNumberOfArguments获取函数的所有参数类型，方法的实际的参数个数比定义的参数多了两个。
     一个是id， 一个是SEL。  
     
-4.
+4.函数编码
+    通过方法method_getTypeEncoding可以获取函数的编码，其结果是一串值；
+    例如方法-(void)getMethod;的编码为v16@0:8;
+        这里v是返回值，@0是第一个参数(对象)，0:8是第二个参数(方法选择器SEL)；
