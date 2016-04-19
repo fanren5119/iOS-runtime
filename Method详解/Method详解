@@ -1,0 +1,26 @@
+1.Method类型
+    typedef struct objc_method *Method;
+    struct objc_method {
+        SEL method_name;    //方法名称
+        char *method_types; //参数以及返回类型的描述
+        IMP method_imp;     //方法的具体实现的指针
+    }
+    
+2.Method的所有方法
+    method_getName                  //获取函数名
+    method_getImplementation        //获取函数的实现IMP
+    method_getTypeEncoding          //获取函数的type encoding
+    method_getNumberOfArguments     //获取参数个数
+    method_copyReturnType           //获取返回值类型
+    method_copyArgumentType         //获取参数类型
+    method_setImplementation        //设置函数的实现IMP
+    method_exchangeImplementations  //交换函数的实现IMP
+    
+3.方法中有两个默认的参数
+    通过method_getNumberOfArguments获取函数的所有参数类型，方法的实际的参数个数比定义的参数多了两个。
+    一个是id， 一个是SEL。  
+    
+4.函数编码
+    通过方法method_getTypeEncoding可以获取函数的编码，其结果是一串值；
+    例如方法-(void)getMethod;的编码为v16@0:8;
+        这里v是返回值，@0是第一个参数(对象)，0:8是第二个参数(方法选择器SEL)；
