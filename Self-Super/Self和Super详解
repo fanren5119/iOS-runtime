@@ -1,0 +1,30 @@
+1.问题：
+    一个People类继承自NSObject，而一个Man类继承自NSObject；在Man的实例方法中：
+    NSLog(@"%@", NSStringFromClass([self class]));
+    NSLog(@"%@", NSStringFromClass([super class]));
+    结果：Man  Man
+    
+2.self与super
+    ① self是类的隐藏参数，指向当前调用方法的这个类的实例；
+    ② super是一个逻辑关键词，他本质上是一个编译器标识符，和self指向同一个消息接收者；
+    ③ self和super在调用方法时，接收消息的对象都是当前类；
+    ④ 不同的是，super告诉编译器，调用方法的时候，要从父类开始寻找，而不是本类。
+    
+3.runtime
+    使用clang重写命令(clang -rewrite-objc main.m)
+    [self class]和[super class]被转换为：
+    ((Class (*)(id, SEL))(void *)objc_msgSend)((id)self, sel_registerName("class"))
+    ((Class (*)(__rw_objc_super *, SEL))(void *)objc_msgSendSuper)((__rw_objc_super)
+        {(id)self, (id)class_getSuperclass(objc_getClass("Man"))}, sel_registerName("class"))
+    ① 其中[self class]被转换为objc_msgSend函数，第一个参数是Man这个类的实例，在这个类中
+寻找class方法，没有，去父类中寻找，也没有，最后在NSObject中找到class方法，从而返回self
+的类，输出结果为Man；
+    ② 其中[super class]被转换为objc_msgSendSuper，这个函数会首先构造一个objc_super结构体，
+其定义如下：
+    struct objc_super {
+        __unsafe_unretained id receiver;        
+        __unsafe_unretained Class super_class;
+    };
+    该结构体的第一个参数是self，第二个参数实际上是People类；
+    然后回去People类中寻找class方法，在NSObject类中找到class方法；
+    最后会使用objc_msgSend(objc_super->receiver, @selector(class))；此时和[self class]已经一样了。
